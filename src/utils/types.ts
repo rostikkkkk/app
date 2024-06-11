@@ -23,3 +23,10 @@ export interface CategoryFilterProps {
   options: string[];
   onSelectChange: (event: SelectChangeEvent) => void;
 }
+
+export interface ProductFormProps {
+  products: Product[];
+  setFilteredProducts: React.Dispatch<React.SetStateAction<Product[]>>;
+  options: string[];
+  setFormSubmitted: React.Dispatch<React.SetStateAction<boolean>>;
+}

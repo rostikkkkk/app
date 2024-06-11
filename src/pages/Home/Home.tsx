@@ -1,15 +1,14 @@
-import { FC, useEffect, useState } from "react";
-import { Box, SelectChangeEvent, Typography } from "@mui/material";
+import React, { FC, useEffect, useState } from "react";
+import { Box, Typography } from "@mui/material";
 import ProductList from "../../components/ProductList/ProductList";
 import { Product } from "../../utils/types";
-import ProductFilter from "../../components/ProductFilter/ProductFilter";
-import CategoryFilter from "../../components/CategoryFilter/CategoryFilter";
+import ProductForm from "../../components/ProductForm/ProductForm";
 
 const Home: FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
-  const [filter, setFilter] = useState<string>("");
-  const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [formSubmitted, setFormSubmitted] = useState(false); // Доданий стан для відстеження відправки форми
 
   useEffect(() => {
     const fetchData = async () => {
@@ -25,22 +24,6 @@ const Home: FC = () => {
     };
     fetchData();
   }, []);
-
-  const handleFilterChange = (value: string) => {
-    setFilter(value);
-  };
-
-  const handleCategoryChange = (event: SelectChangeEvent) => {
-    setSelectedCategory(event.target.value);
-  };
-
-  const filteredProducts = products.filter(
-    (product) =>
-      product.name.toLowerCase().includes(filter.toLowerCase()) &&
-      (selectedCategory === "" ||
-        selectedCategory === "All categories" ||
-        product.bsr_category === selectedCategory)
-  );
 
   const uniqueCategories = Array.from(
     new Set([
@@ -58,15 +41,19 @@ const Home: FC = () => {
         Products from Amazon
       </Typography>
       <Box sx={{ display: "flex", gap: "2rem" }}>
-        <ProductFilter onFilterChange={handleFilterChange} />
-        <CategoryFilter
-          category={selectedCategory}
+        <ProductForm
+          products={products}
+          setFilteredProducts={setFilteredProducts}
           options={uniqueCategories}
-          onSelectChange={handleCategoryChange}
+          setFormSubmitted={setFormSubmitted}
         />
       </Box>
-      <ProductList products={filteredProducts} loading={loading} />
+      <ProductList
+        products={formSubmitted ? filteredProducts : products}
+        loading={loading}
+      />
     </Box>
   );
 };
+
 export default Home;
