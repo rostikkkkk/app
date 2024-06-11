@@ -1,26 +1,114 @@
 import { FC } from "react";
 import { Product } from "../../utils/types";
-import classes from "./ProductItem.module.scss";
-const ProductItem: FC<Product> = ({ img, name, price, link, asin }) => {
+import { makeStyles } from "@mui/styles";
+import { Box, Typography, Link } from "@mui/material";
+
+const useStyles = makeStyles({
+  product: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    maxWidth: 800,
+    gap: "2rem",
+    width: "100%",
+    padding: "1.25rem",
+    backgroundColor: "#f5f5f5",
+  },
+  productImage: {
+    height: 220,
+    width: 250,
+    "& img": {
+      width: "100%",
+      height: "100%",
+      objectFit: "contain",
+    },
+  },
+  productDesc: {
+    width: "100%",
+    display: "flex",
+    flexDirection: "column",
+    gap: "1rem",
+    color: "#0f1111",
+  },
+  productTitle: {
+    fontSize: "1.25rem",
+    fontStyle: "normal",
+    fontWeight: 600,
+  },
+  productPrice: {
+    fontSize: "1rem",
+    fontStyle: "normal",
+    fontWeight: 600,
+  },
+  productLink: {
+    padding: "0.625rem 1rem",
+    width: "fit-content",
+    borderRadius: "0.625rem",
+    backgroundColor: "transparent",
+    outline: "2px solid #0f1111",
+    textDecoration: "none",
+    color: "#0f1111",
+    fontSize: "1rem",
+    fontStyle: "normal",
+    fontWeight: 500,
+    transition: "all 0.3s ease",
+    "&:hover": {
+      backgroundColor: "#0f1111",
+      color: "#ffffff",
+      boxShadow: "0 4px 10px 0 rgba(213, 217, 217, 0.7)",
+    },
+  },
+  productCode: {
+    fontSize: "1rem",
+    fontStyle: "normal",
+    fontWeight: 500,
+  },
+
+  category: {
+    fontSize: "1rem",
+    fontStyle: "italic",
+    fontWeight: 600,
+  },
+});
+
+const ProductItem: FC<Product> = ({
+  img,
+  name,
+  price,
+  link,
+  asin,
+  bsr_category,
+}) => {
+  const classes = useStyles();
+
   return (
-    <div className={classes.product}>
-      <div className={classes.product__image}>
+    <Box className={classes.product}>
+      <Box className={classes.productImage}>
         <img src={img} alt={name} />
-      </div>
-      <div className={classes.product__desc}>
-        <h2 className={classes.product__title}>{name}</h2>
-        <p className={classes.product__price}>Price: ${price}</p>
-        <p className={classes.product__code}>Asin: {asin}</p>
-        <a
-          className={classes.product__link}
+      </Box>
+      <Box className={classes.productDesc}>
+        <Typography className={classes.productTitle} variant="h2">
+          {name}
+        </Typography>
+        <Typography className={classes.productPrice} variant="body1">
+          Price: ${price}
+        </Typography>
+        <Typography className={classes.productCode} variant="body1">
+          Asin: {asin}
+        </Typography>
+        <Typography className={classes.category} variant="body1">
+          Category: {bsr_category}
+        </Typography>
+        <Link
+          className={classes.productLink}
           href={link}
           target="_blank"
           rel="noopener noreferrer"
         >
           View on Amazon
-        </a>
-      </div>
-    </div>
+        </Link>
+      </Box>
+    </Box>
   );
 };
 

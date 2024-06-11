@@ -1,6 +1,6 @@
 import { FC, MouseEvent } from "react";
-import { Link, useLocation } from "react-router-dom";
-import classes from "./Header.module.scss";
+import { useLocation } from "react-router-dom";
+import { AppBar, Link } from "@mui/material";
 
 const Header: FC = () => {
   const location = useLocation();
@@ -12,11 +12,30 @@ const Header: FC = () => {
   };
 
   return (
-    <header className={classes.header}>
-      <Link to="/" onClick={handleClick}>
+    <AppBar
+      variant="outlined"
+      position="static"
+      sx={{
+        padding: "1.25rem 2rem",
+        backgroundColor: "#FFFFFF",
+        border: "none",
+      }}
+    >
+      <Link
+        href="/"
+        onClick={handleClick}
+        sx={{
+          fontSize: "1.25em",
+          color: "#000",
+          textDecoration: "none",
+          "&:hover": {
+            color: "#0000FF",
+          },
+        }}
+      >
         Home page
       </Link>
-    </header>
+    </AppBar>
   );
 };
 

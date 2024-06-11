@@ -1,4 +1,4 @@
-import { ChangeEvent } from "react";
+import { SelectChangeEvent } from "@mui/material";
 
 export interface Product {
   asin: string;
@@ -6,6 +6,7 @@ export interface Product {
   img: string;
   price: number;
   link: string;
+  bsr_category: string;
 }
 
 export interface ProductListProps {
@@ -14,6 +15,11 @@ export interface ProductListProps {
 }
 
 export interface ProductFilterProps {
-  filter: string;
-  onFilterChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  onFilterChange: (filter: string) => void;
+}
+
+export interface CategoryFilterProps {
+  category: string;
+  options: string[];
+  onSelectChange: (event: SelectChangeEvent) => void;
 }

@@ -1,12 +1,14 @@
-import classes from "./Home.module.scss";
+import { FC, useEffect, useState } from "react";
+import { Box, SelectChangeEvent, Typography } from "@mui/material";
 import ProductList from "../../components/ProductList/ProductList";
-import { ChangeEvent, FC, useEffect, useState } from "react";
 import { Product } from "../../utils/types";
 import ProductFilter from "../../components/ProductFilter/ProductFilter";
+import CategoryFilter from "../../components/CategoryFilter/CategoryFilter";
 
 const Home: FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [filter, setFilter] = useState<string>("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -24,20 +26,47 @@ const Home: FC = () => {
     fetchData();
   }, []);
 
-  const handleFilterChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setFilter(e.target.value);
+  const handleFilterChange = (value: string) => {
+    setFilter(value);
   };
 
-  const filteredProducts = products.filter((product) =>
-    product.name.toLowerCase().includes(filter.toLowerCase())
+  const handleCategoryChange = (event: SelectChangeEvent) => {
+    setSelectedCategory(event.target.value);
+  };
+
+  const filteredProducts = products.filter(
+    (product) =>
+      product.name.toLowerCase().includes(filter.toLowerCase()) &&
+      (selectedCategory === "" ||
+        selectedCategory === "All categories" ||
+        product.bsr_category === selectedCategory)
   );
 
+  const uniqueCategories = Array.from(
+    new Set([
+      ...products.map((product) => product.bsr_category),
+      "All categories",
+    ])
+  ).sort();
+
   return (
-    <section className={classes.home}>
-      <h1 className={classes.home__title}>Products from Amazon</h1>
-      <ProductFilter filter={filter} onFilterChange={handleFilterChange} />
+    <Box
+      component="section"
+      sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+    >
+      <Typography variant="h1" sx={{ fontSize: "2rem", mb: "1.5rem" }}>
+        Products from Amazon
+      </Typography>
+      <Box sx={{ display: "flex", gap: "2rem" }}>
+        <ProductFilter onFilterChange={handleFilterChange} />
+        <CategoryFilter
+          category={selectedCategory}
+          options={uniqueCategories}
+          onSelectChange={handleCategoryChange}
+        />
+      </Box>
       <ProductList products={filteredProducts} loading={loading} />
-    </section>
+    </Box>
   );
 };
 export default Home;

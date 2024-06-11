@@ -2,14 +2,23 @@ import Header from "../Header/Header";
 import { Outlet } from "react-router-dom";
 import Footer from "../Footer/Footer";
 import { FC } from "react";
-import classes from "./Layout.module.scss";
+import { Box, Container } from "@mui/material";
 const Layout: FC = () => {
   return (
-    <div className={classes.layout}>
+    <Container
+      sx={{
+        bgcolor: "white",
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+      }}
+    >
       <Header />
-      <Outlet />
+      <Box component="main" sx={{ flex: 1 }}>
+        <Outlet />
+      </Box>
       <Footer />
-    </div>
+    </Container>
   );
 };
 
