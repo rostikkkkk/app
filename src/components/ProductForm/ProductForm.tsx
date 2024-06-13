@@ -1,8 +1,9 @@
-import React, { FC, KeyboardEvent } from "react";
+import React, { FC, useEffect } from "react";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import {
   Box,
+  Button,
   FormControl,
   InputLabel,
   MenuItem,
@@ -10,25 +11,28 @@ import {
   TextField,
 } from "@mui/material";
 import { SelectChangeEvent } from "@mui/material/Select";
-import { ProductFormProps } from "../../utils/types";
+import { useQueryParams, StringParam } from "use-query-params";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../redux/types";
+import { filterProducts } from "../../redux/actions";
 
-const ProductForm: FC<ProductFormProps> = ({
-  products,
-  setFilteredProducts,
-  options,
-  setFormSubmitted,
-}) => {
-  const filterProducts = (title: string, category: string) => {
-    const filteredProducts = products.filter(
-      (product) =>
-        product.name.toLowerCase().includes(title.toLowerCase()) &&
-        (category === "" ||
-          category === "All categories" ||
-          product.bsr_category === category)
-    );
-    setFilteredProducts(filteredProducts);
-    setFormSubmitted(true);
+const ProductForm: FC = () => {
+  const dispatch = useDispatch();
+  const products = useSelector((state: RootState) => state.products) || [];
+  const handleFilter = (title: string, category: string) => {
+    dispatch(filterProducts(title, category));
   };
+  const [query, setQuery] = useQueryParams({
+    title: StringParam,
+    category: StringParam,
+  });
+
+  const uniqueCategories = Array.from(
+    new Set([
+      ...products.map((product) => product.bsr_category),
+      "All categories",
+    ])
+  ).sort();
 
   const validationSchema = Yup.object({
     title: Yup.string().min(3, "Minimum 3 symbols are required"),
@@ -36,30 +40,30 @@ const ProductForm: FC<ProductFormProps> = ({
 
   const formik = useFormik({
     initialValues: {
-      title: "",
-      category: "",
+      title: query.title || "",
+      category: query.category || "All categories",
     },
     validationSchema,
     onSubmit: (values) => {
-      filterProducts(values.title, values.category);
+      setQuery({ title: values.title, category: values.category });
+      handleFilter(values.title, values.category);
     },
   });
 
-  const showError = !!(formik.touched.title && formik.errors.title);
-
-  const handleKeyDown = (e: KeyboardEvent<HTMLFormElement>) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      formik.handleSubmit();
+  useEffect(() => {
+    if (query.title || query.category) {
+      handleFilter(query.title || "", query.category || "");
     }
-  };
+  }, [query, products]);
+
+  const showError = !!(formik.touched.title && formik.errors.title);
   const handleCategoryChange = (e: SelectChangeEvent) => {
     const { value } = e.target;
     formik.setFieldValue("category", value);
-    formik.handleSubmit();
   };
+
   return (
-    <form onSubmit={formik.handleSubmit} onKeyDown={handleKeyDown}>
+    <form onSubmit={formik.handleSubmit}>
       <Box sx={{ display: "flex", gap: "2rem" }}>
         <TextField
           label="Product name"
@@ -82,13 +86,25 @@ const ProductForm: FC<ProductFormProps> = ({
             onChange={handleCategoryChange}
             variant="outlined"
           >
-            {options.map((option: string) => (
+            {uniqueCategories.map((option: string) => (
               <MenuItem key={option} value={option}>
                 {option}
               </MenuItem>
             ))}
           </Select>
         </FormControl>
+        <Button
+          sx={{
+            backgroundColor: "#1976d2",
+            color: "#fff",
+            "&:hover": {
+              backgroundColor: "#115293",
+            },
+          }}
+          type="submit"
+        >
+          Submit
+        </Button>
       </Box>
     </form>
   );

@@ -3,6 +3,7 @@ import { Outlet } from "react-router-dom";
 import Footer from "../Footer/Footer";
 import { FC } from "react";
 import { Box, Container } from "@mui/material";
+
 const Layout: FC = () => {
   return (
     <Container

@@ -1,6 +1,6 @@
 import { FC, MouseEvent } from "react";
 import { useLocation } from "react-router-dom";
-import { AppBar, Link } from "@mui/material";
+import { AppBar, Box, Link } from "@mui/material";
 
 const Header: FC = () => {
   const location = useLocation();
@@ -21,20 +21,22 @@ const Header: FC = () => {
         border: "none",
       }}
     >
-      <Link
-        href="/"
-        onClick={handleClick}
-        sx={{
-          fontSize: "1.25em",
-          color: "#000",
-          textDecoration: "none",
-          "&:hover": {
-            color: "#0000FF",
-          },
-        }}
-      >
-        Home page
-      </Link>
+      <Box>
+        <Link
+          href="/"
+          onClick={handleClick}
+          sx={{
+            fontSize: "1.25em",
+            color: "#000",
+            textDecoration: "none",
+            "&:hover": {
+              color: "#0000FF",
+            },
+          }}
+        >
+          Home page
+        </Link>
+      </Box>
     </AppBar>
   );
 };

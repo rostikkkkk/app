@@ -1,4 +1,4 @@
-import { FC } from "react";
+import React, { FC } from "react";
 import { Product } from "../../utils/types";
 import { makeStyles } from "@mui/styles";
 import { Box, Typography, Link } from "@mui/material";
@@ -23,7 +23,7 @@ const useStyles = makeStyles({
       objectFit: "contain",
     },
   },
-  productDesc: {
+  productInfo: {
     width: "100%",
     display: "flex",
     flexDirection: "column",
@@ -69,6 +69,37 @@ const useStyles = makeStyles({
     fontStyle: "italic",
     fontWeight: 600,
   },
+
+  productView: {
+    padding: "0.625rem 1rem",
+    width: "fit-content",
+    borderRadius: "1rem",
+    backgroundColor: "transparent",
+    outline: "2px solid #1a73e8",
+    textDecoration: "none",
+    color: "#1a73e8",
+    fontSize: "1.25rem",
+    fontStyle: "normal",
+    fontWeight: 500,
+    transition: "all 0.3s ease",
+    "&:hover": {
+      backgroundColor: "#1a73e8",
+      color: "#ffffff",
+    },
+  },
+  productDesc: {
+    display: "flex",
+    justifyContent: "space-between",
+    gap: "1rem",
+  },
+  productText: {
+    width: "55%",
+  },
+  productLinks: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "1rem",
+  },
 });
 
 const ProductItem: FC<Product> = ({
@@ -86,27 +117,37 @@ const ProductItem: FC<Product> = ({
       <Box className={classes.productImage}>
         <img src={img} alt={name} />
       </Box>
-      <Box className={classes.productDesc}>
+      <Box className={classes.productInfo}>
         <Typography className={classes.productTitle} variant="h2">
           {name}
         </Typography>
-        <Typography className={classes.productPrice} variant="body1">
-          Price: ${price}
-        </Typography>
-        <Typography className={classes.productCode} variant="body1">
-          Asin: {asin}
-        </Typography>
-        <Typography className={classes.category} variant="body1">
-          Category: {bsr_category}
-        </Typography>
-        <Link
-          className={classes.productLink}
-          href={link}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          View on Amazon
-        </Link>
+        <Box className={classes.productDesc}>
+          <Box className={classes.productText}>
+            <Typography className={classes.productPrice} variant="body1">
+              Price: ${price}
+            </Typography>
+            <Typography className={classes.productCode} variant="body1">
+              Asin: {asin}
+            </Typography>
+            <Typography className={classes.category} variant="body1">
+              Category: {bsr_category}
+            </Typography>
+          </Box>
+
+          <Box className={classes.productLinks}>
+            <Link
+              className={classes.productLink}
+              href={link}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              View on Amazon
+            </Link>
+            <Link className={classes.productView} href={`/product/${asin}`}>
+              See details
+            </Link>
+          </Box>
+        </Box>
       </Box>
     </Box>
   );
