@@ -14,12 +14,8 @@ const ProductList: FC<ProductListProps> = ({ products, loading }) => {
     return () => clearTimeout(timer);
   }, []);
 
-  if (loading) {
+  if (loading || !showContent) {
     return <CircularProgress />;
-  }
-
-  if (!showContent) {
-    return null;
   }
 
   if (!products || products.length === 0) {
