@@ -27,7 +27,6 @@ const productReducer = (
             category === "All categories" ||
             product.bsr_category === category)
       );
-      console.log(filteredProducts);
       return { ...state, filteredProducts };
     default:
       return state;

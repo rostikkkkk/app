@@ -15,7 +15,7 @@ const Layout: FC = () => {
       }}
     >
       <Header />
-      <Box component="main" sx={{ flex: 1 }}>
+      <Box component="main" sx={{ flex: 1, mb: "3rem" }}>
         <Outlet />
       </Box>
       <Footer />
