@@ -1,6 +1,8 @@
 import { Box, Link, Typography } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 const NotFound = () => {
+  const { t } = useTranslation();
   return (
     <Box
       component="section"
@@ -10,7 +12,7 @@ const NotFound = () => {
         variant="h1"
         sx={{ fontSize: "2rem", mb: "1.5rem", color: "#ff0000" }}
       >
-        Ooops, page does not exist
+        {t("Отакої, сторінки не існує")}
       </Typography>
       <Link
         href="/"
@@ -27,7 +29,7 @@ const NotFound = () => {
           },
         }}
       >
-        Return home page
+        {t("Повернутися на головну сторінку")}
       </Link>
     </Box>
   );

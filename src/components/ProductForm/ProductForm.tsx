@@ -15,6 +15,7 @@ import { useQueryParams, StringParam } from "use-query-params";
 import { useDispatch, useSelector } from "react-redux";
 import { filterProducts } from "../../redux/actions/actionCreator";
 import { Product } from "../../utils/types";
+import { useTranslation } from "react-i18next";
 
 const validationSchema = Yup.object({
   title: Yup.string().min(3, "Minimum 3 symbols are required"),
@@ -36,6 +37,8 @@ const ProductForm: FC = () => {
       "All categories",
     ])
   ).sort();
+
+  const { t } = useTranslation();
 
   const formik = useFormik({
     initialValues: {
@@ -65,7 +68,7 @@ const ProductForm: FC = () => {
     <form onSubmit={formik.handleSubmit}>
       <Box sx={{ display: "flex", gap: "2rem" }}>
         <TextField
-          label="Product name"
+          label={t("Назва товару")}
           variant="outlined"
           name="title"
           value={formik.values.title}
@@ -77,10 +80,10 @@ const ProductForm: FC = () => {
           }}
         />
         <FormControl sx={{ minWidth: 250 }}>
-          <InputLabel htmlFor="category">Categories</InputLabel>
+          <InputLabel htmlFor="category">{t("Категорії")}</InputLabel>
           <Select
             id="category"
-            label="Categories"
+            label={t("Категорії")}
             value={formik.values.category}
             onChange={handleCategoryChange}
             variant="outlined"
@@ -102,7 +105,7 @@ const ProductForm: FC = () => {
           }}
           type="submit"
         >
-          Submit
+          {t("Шукати")}
         </Button>
       </Box>
     </form>

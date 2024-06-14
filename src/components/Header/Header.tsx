@@ -1,7 +1,8 @@
-import { FC, MouseEvent } from "react";
+import { FC, MouseEvent, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { AppBar, Box, Link, Toolbar, Typography } from "@mui/material";
-
+import LangSwitcher from "../LangSwitcher/LangSwitcher";
+import { useTranslation } from "react-i18next";
 const Header: FC = () => {
   const location = useLocation();
 
@@ -10,7 +11,8 @@ const Header: FC = () => {
       event.preventDefault();
     }
   };
-
+  const { t } = useTranslation();
+  const [lang, setLang] = useState({ code: "ua", label: "UA" });
   return (
     <AppBar
       position="static"
@@ -30,8 +32,9 @@ const Header: FC = () => {
               },
             }}
           >
-            Home page
+            {t("Головна сторінка")}
           </Link>
+          <LangSwitcher lang={lang} setLang={setLang} />
         </Typography>
       </Toolbar>
     </AppBar>
