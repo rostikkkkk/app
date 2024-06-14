@@ -1,32 +1,9 @@
-import React, { FC, useEffect } from "react";
+import React, { FC } from "react";
 import { Box, Typography } from "@mui/material";
 import ProductList from "../../components/ProductList/ProductList";
 import ProductForm from "../../components/ProductForm/ProductForm";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../redux/types";
-import { fetchData } from "../../redux/actions";
-import { Dispatch } from "redux";
-import { StringParam, useQueryParams } from "use-query-params";
 
 const Home: FC = () => {
-  const dispatch: Dispatch = useDispatch();
-  const products = useSelector((state: RootState) => state.products);
-  const filteredProducts = useSelector(
-    (state: RootState) => state.filteredProducts
-  );
-  const isLoading = useSelector((state: RootState) => state.isLoading);
-  const [query, setQuery] = useQueryParams({
-    title: StringParam,
-    category: StringParam,
-  });
-  useEffect(() => {
-    // @ts-ignore
-    dispatch(fetchData());
-  }, [dispatch]);
-
-  const queryParamsExist =
-    query.title !== undefined || query.category !== undefined;
-  console.log(queryParamsExist);
   return (
     <Box
       component="section"
@@ -44,10 +21,7 @@ const Home: FC = () => {
         }}
       >
         <ProductForm />
-        <ProductList
-          products={queryParamsExist ? filteredProducts : products}
-          loading={isLoading}
-        />
+        <ProductList />
       </Box>
     </Box>
   );

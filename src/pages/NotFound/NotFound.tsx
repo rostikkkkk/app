@@ -1,7 +1,5 @@
 import { Box, Link, Typography } from "@mui/material";
-import { useSelector, useDispatch } from "react-redux";
-import { fetchData } from "../../redux/actions";
-import { useEffect } from "react";
+
 const NotFound = () => {
   return (
     <Box

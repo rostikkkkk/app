@@ -1,10 +1,30 @@
 import React, { FC, useEffect, useState } from "react";
 import ProductItem from "../ProductItem/ProductItem";
-import { ProductListProps } from "../../utils/types";
 import { Container, Typography, CircularProgress } from "@mui/material";
+import { Dispatch } from "redux";
+import { useDispatch, useSelector } from "react-redux";
+import { StringParam, useQueryParams } from "use-query-params";
+import { GET_PRODUCTS } from "../../redux/actionTypes";
 
-const ProductList: FC<ProductListProps> = ({ products, loading }) => {
+const ProductList: FC = () => {
   const [showContent, setShowContent] = useState(false);
+  const dispatch: Dispatch = useDispatch();
+  const { products, filteredProducts, isLoading } = useSelector(
+    (store: any) => store?.products || {}
+  );
+  const [query, setQuery] = useQueryParams({
+    title: StringParam,
+    category: StringParam,
+  });
+  useEffect(() => {
+    // @ts-ignore
+    dispatch({ type: GET_PRODUCTS });
+  }, [dispatch]);
+
+  const queryParamsExist =
+    query.title !== undefined || query.category !== undefined;
+
+  const productsList = queryParamsExist ? filteredProducts : products;
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -14,18 +34,17 @@ const ProductList: FC<ProductListProps> = ({ products, loading }) => {
     return () => clearTimeout(timer);
   }, []);
 
-  if (loading || !showContent) {
+  if (isLoading || !showContent) {
     return <CircularProgress />;
   }
 
-  if (!products || products.length === 0) {
+  if (!productsList || productsList.length === 0) {
     return (
       <Typography variant="body1" color="#000">
         No products found.
       </Typography>
     );
   }
-
   return (
     <Container
       sx={{
@@ -36,15 +55,15 @@ const ProductList: FC<ProductListProps> = ({ products, loading }) => {
         paddingBlock: 5,
       }}
     >
-      {products.map(({ asin, img, name, price, link, bsr_category }) => (
+      {productsList.map((product: any) => (
         <ProductItem
-          key={asin}
-          img={img}
-          name={name}
-          price={price}
-          link={link}
-          asin={asin}
-          bsr_category={bsr_category}
+          key={product.asin}
+          img={product.img}
+          name={product.name}
+          price={product.price}
+          link={product.link}
+          asin={product.asin}
+          bsr_category={product.bsr_category}
         />
       ))}
     </Container>

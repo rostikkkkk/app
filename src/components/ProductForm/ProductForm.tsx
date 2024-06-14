@@ -13,30 +13,29 @@ import {
 import { SelectChangeEvent } from "@mui/material/Select";
 import { useQueryParams, StringParam } from "use-query-params";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../redux/types";
-import { filterProducts } from "../../redux/actions";
+import { filterProducts } from "../../redux/actions/actionCreator";
+import { Product } from "../../utils/types";
+
+const validationSchema = Yup.object({
+  title: Yup.string().min(3, "Minimum 3 symbols are required"),
+});
 
 const ProductForm: FC = () => {
   const dispatch = useDispatch();
-  const products = useSelector((state: RootState) => state.products) || [];
+  const { products } = useSelector((store: any) => store?.products || {});
   const handleFilter = (title: string, category: string) => {
-    dispatch(filterProducts(title, category));
+    dispatch(filterProducts({ title: title, category: category }));
   };
   const [query, setQuery] = useQueryParams({
     title: StringParam,
     category: StringParam,
   });
-
   const uniqueCategories = Array.from(
     new Set([
-      ...products.map((product) => product.bsr_category),
+      ...products.map((product: Product) => product.bsr_category),
       "All categories",
     ])
   ).sort();
-
-  const validationSchema = Yup.object({
-    title: Yup.string().min(3, "Minimum 3 symbols are required"),
-  });
 
   const formik = useFormik({
     initialValues: {

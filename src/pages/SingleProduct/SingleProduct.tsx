@@ -1,47 +1,55 @@
-import { Box, Typography } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import ProductItem from "../../components/ProductItem/ProductItem";
 import { useParams } from "react-router-dom";
-import { FC, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import React, { FC, useEffect, useState } from "react";
+import { Dispatch } from "redux";
+import { GET_PRODUCTS } from "../../redux/actionTypes";
 import { Product } from "../../utils/types";
 
 const SingleProduct: FC = () => {
   const { asinCode } = useParams<{ asinCode: string }>();
-  const [product, setProduct] = useState<Product | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("/db.json");
-        const data = await response.json();
-        const productByAsin = data.products.find(
-          (product: Product) => product.asin === asinCode
-        );
-        setProduct(productByAsin || null);
-      } catch (error) {
-        console.error("Error fetching data", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, [asinCode]);
+  const dispatch: Dispatch = useDispatch();
 
-  if (loading) {
+  useEffect(() => {
+    dispatch({ type: GET_PRODUCTS });
+  }, [dispatch]);
+
+  const { products, isLoading } = useSelector(
+    (store: any) => store?.products || {}
+  );
+
+  const findProduct = products.find(
+    (product: Product) => product.asin === asinCode
+  );
+
+  const [showContent, setShowContent] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowContent(true);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading || !showContent) {
     return (
       <Box sx={{ display: "flex", justifyContent: "center", mt: "2rem" }}>
-        <Typography variant="h6">Loading</Typography>
+        <CircularProgress />
       </Box>
     );
   }
 
-  if (!product) {
+  if (!findProduct) {
     return (
       <Box sx={{ display: "flex", justifyContent: "center", mt: "2rem" }}>
         <Typography variant="h6">Product not found</Typography>
       </Box>
     );
   }
-  const { name, img, price, asin, bsr_category, link } = product;
+
+  const { name, img, price, asin, bsr_category, link } = findProduct;
 
   return (
     <Box
@@ -60,4 +68,5 @@ const SingleProduct: FC = () => {
     </Box>
   );
 };
+
 export default SingleProduct;
