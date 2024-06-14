@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, FC } from "react";
 
 import { useTranslation } from "react-i18next";
 import { Box, Button, List, ListItem, Typography } from "@mui/material";
+import { LangSwitcherProps, Language } from "../../utils/types";
 
-const LangSwitcher = ({ lang, setLang }) => {
+const LangSwitcher: FC<LangSwitcherProps> = ({ lang, setLang }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { i18n } = useTranslation();
 
@@ -21,7 +22,7 @@ const LangSwitcher = ({ lang, setLang }) => {
     }
   }, []);
 
-  const handleLanguageChange = (language) => {
+  const handleLanguageChange = (language: Language) => {
     setLang(language);
     i18n.changeLanguage(language.label);
     localStorage.setItem("language", language.label);
