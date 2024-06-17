@@ -1,23 +1,22 @@
-import React, { FC, useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import ProductItem from "../ProductItem/ProductItem";
-import { Container, Typography, CircularProgress } from "@mui/material";
-import { Dispatch } from "redux";
 import { useDispatch, useSelector } from "react-redux";
 import { StringParam, useQueryParams } from "use-query-params";
 import { GET_PRODUCTS } from "../../redux/actionTypes";
+import { Product } from "../../utils/types";
 
 const ProductList: FC = () => {
   const [showContent, setShowContent] = useState(false);
-  const dispatch: Dispatch = useDispatch();
+  const dispatch = useDispatch();
   const { products, filteredProducts, isLoading } = useSelector(
     (store: any) => store?.products || {}
   );
-  const [query, setQuery] = useQueryParams({
+  const [query] = useQueryParams({
     title: StringParam,
     category: StringParam,
   });
+
   useEffect(() => {
-    // @ts-ignore
     dispatch({ type: GET_PRODUCTS });
   }, [dispatch]);
 
@@ -35,27 +34,16 @@ const ProductList: FC = () => {
   }, []);
 
   if (isLoading || !showContent) {
-    return <CircularProgress />;
+    return <p>Loading...</p>;
   }
 
   if (!productsList || productsList.length === 0) {
-    return (
-      <Typography variant="body1" color="#000">
-        No products found.
-      </Typography>
-    );
+    return <p>No products found.</p>;
   }
+
   return (
-    <Container
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        gap: 3,
-        paddingBlock: 5,
-      }}
-    >
-      {productsList.map((product: any) => (
+    <section>
+      {productsList.map((product: Product) => (
         <ProductItem
           key={product.asin}
           img={product.img}
@@ -66,7 +54,7 @@ const ProductList: FC = () => {
           bsr_category={product.bsr_category}
         />
       ))}
-    </Container>
+    </section>
   );
 };
 

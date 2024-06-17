@@ -1,106 +1,6 @@
 import React, { FC } from "react";
 import { Product } from "../../utils/types";
-import { makeStyles } from "@mui/styles";
-import { Box, Typography, Link } from "@mui/material";
-
-const useStyles = makeStyles({
-  product: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    maxWidth: 800,
-    gap: "2rem",
-    width: "100%",
-    padding: "1.25rem",
-    backgroundColor: "#f5f5f5",
-  },
-  productImage: {
-    height: 220,
-    width: 250,
-    "& img": {
-      width: "100%",
-      height: "100%",
-      objectFit: "contain",
-    },
-  },
-  productInfo: {
-    width: "100%",
-    display: "flex",
-    flexDirection: "column",
-    gap: "1rem",
-    color: "#0f1111",
-  },
-  productTitle: {
-    fontSize: "1.25rem",
-    fontStyle: "normal",
-    fontWeight: 600,
-  },
-  productPrice: {
-    fontSize: "1rem",
-    fontStyle: "normal",
-    fontWeight: 600,
-  },
-  productLink: {
-    padding: "0.625rem 1rem",
-    width: "fit-content",
-    borderRadius: "0.625rem",
-    backgroundColor: "transparent",
-    outline: "2px solid #0f1111",
-    textDecoration: "none",
-    color: "#0f1111",
-    fontSize: "1rem",
-    fontStyle: "normal",
-    fontWeight: 500,
-    transition: "all 0.3s ease",
-    "&:hover": {
-      backgroundColor: "#0f1111",
-      color: "#ffffff",
-      boxShadow: "0 4px 10px 0 rgba(213, 217, 217, 0.7)",
-    },
-  },
-  productCode: {
-    fontSize: "1rem",
-    fontStyle: "normal",
-    fontWeight: 500,
-  },
-
-  category: {
-    fontSize: "1rem",
-    fontStyle: "italic",
-    fontWeight: 600,
-  },
-
-  productView: {
-    padding: "0.625rem 1rem",
-    width: "fit-content",
-    borderRadius: "1rem",
-    backgroundColor: "transparent",
-    outline: "2px solid #1a73e8",
-    textDecoration: "none",
-    color: "#1a73e8",
-    fontSize: "1.25rem",
-    fontStyle: "normal",
-    fontWeight: 500,
-    transition: "all 0.3s ease",
-    "&:hover": {
-      backgroundColor: "#1a73e8",
-      color: "#ffffff",
-    },
-  },
-  productDesc: {
-    display: "flex",
-    justifyContent: "space-between",
-    gap: "1rem",
-  },
-  productText: {
-    width: "55%",
-  },
-  productLinks: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "1rem",
-  },
-});
+import { Link } from "react-router-dom";
 
 const ProductItem: FC<Product> = ({
   img,
@@ -110,46 +10,40 @@ const ProductItem: FC<Product> = ({
   asin,
   bsr_category,
 }) => {
-  const classes = useStyles();
-
   return (
-    <Box className={classes.product}>
-      <Box className={classes.productImage}>
-        <img src={img} alt={name} />
-      </Box>
-      <Box className={classes.productInfo}>
-        <Typography className={classes.productTitle} variant="h2">
-          {name}
-        </Typography>
-        <Box className={classes.productDesc}>
-          <Box className={classes.productText}>
-            <Typography className={classes.productPrice} variant="body1">
-              Price: ${price}
-            </Typography>
-            <Typography className={classes.productCode} variant="body1">
-              Asin: {asin}
-            </Typography>
-            <Typography className={classes.category} variant="body1">
+    <article className="flex items-center justify-between max-w-screen-md gap-8 w-full p-5 bg-gray-100">
+      <div className="h-44 w-52">
+        <img className="w-full h-full object-contain" src={img} alt={name} />
+      </div>
+      <div className="flex flex-col w-full gap-4 text-gray-900">
+        <h2 className="text-lg font-semibold">{name}</h2>
+        <div className="flex justify-between gap-4">
+          <div className="w-55">
+            <p className="text-base font-semibold">Price: ${price}</p>
+            <p className="text-base font-medium">Asin: {asin}</p>
+            <p className="text-base font-semibold italic">
               Category: {bsr_category}
-            </Typography>
-          </Box>
-
-          <Box className={classes.productLinks}>
-            <Link
-              className={classes.productLink}
+            </p>
+          </div>
+          <div className="flex flex-col gap-4">
+            <a
+              className="bg-transparent border-2 border-gray-900 text-gray-900 px-4 py-2 w-fit-content rounded font-medium transition duration-300 ease-in-out hover:bg-gray-900 hover:text-white hover:shadow-md"
               href={link}
               target="_blank"
               rel="noopener noreferrer"
             >
               View on Amazon
-            </Link>
-            <Link className={classes.productView} href={`/product/${asin}`}>
+            </a>
+            <Link
+              to={`/product/${asin}`}
+              className="px-4 py-2 w-fit-content rounded bg-transparent border-2 border-blue-500 text-blue-500 font-medium transition duration-300 ease-in-out hover:bg-blue-500 hover:text-white"
+            >
               See details
             </Link>
-          </Box>
-        </Box>
-      </Box>
-    </Box>
+          </div>
+        </div>
+      </div>
+    </article>
   );
 };
 

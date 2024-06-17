@@ -1,37 +1,22 @@
-import { Box, Link, Typography } from "@mui/material";
+import React from "react";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 const NotFound = () => {
   const { t } = useTranslation();
   return (
-    <Box
-      component="section"
-      sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}
-    >
-      <Typography
-        variant="h1"
-        sx={{ fontSize: "2rem", mb: "1.5rem", color: "#ff0000" }}
-      >
+    <section className="flex flex-col items-center">
+      <h1 className="text-2xl mb-6 text-red-600">
         {t("Отакої, сторінки не існує")}
-      </Typography>
+      </h1>
       <Link
-        href="/"
-        sx={{
-          fontSize: "1.25em",
-          color: "#000",
-          textDecoration: "none",
-          border: "3px solid #000",
-          padding: "0.625rem 1rem",
-          borderRadius: "0.8rem",
-          "&:hover": {
-            color: "#0000FF",
-            borderColor: "#0000FF",
-          },
-        }}
+        to="/"
+        className="text-lg text-black border-2 border-black px-4 py-2 rounded-lg transition duration-300 ease-in-out hover:text-blue-600 hover:border-blue-600"
       >
         {t("Повернутися на головну сторінку")}
       </Link>
-    </Box>
+    </section>
   );
 };
+
 export default NotFound;

@@ -1,9 +1,8 @@
-import { Box, CircularProgress, Typography } from "@mui/material";
-import ProductItem from "../../components/ProductItem/ProductItem";
+import { FC, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import React, { FC, useEffect, useState } from "react";
 import { Dispatch } from "redux";
+import ProductItem from "../../components/ProductItem/ProductItem";
 import { GET_PRODUCTS } from "../../redux/actionTypes";
 import { Product } from "../../utils/types";
 
@@ -35,27 +34,24 @@ const SingleProduct: FC = () => {
 
   if (isLoading || !showContent) {
     return (
-      <Box sx={{ display: "flex", justifyContent: "center", mt: "2rem" }}>
-        <CircularProgress />
-      </Box>
+      <div className="flex justify-center mt-8">
+        <h6 className="text-lg">Loading...</h6>
+      </div>
     );
   }
 
   if (!findProduct) {
     return (
-      <Box sx={{ display: "flex", justifyContent: "center", mt: "2rem" }}>
-        <Typography variant="h6">Product not found</Typography>
-      </Box>
+      <div className="flex justify-center mt-8">
+        <h6 className="text-lg">Product not found</h6>
+      </div>
     );
   }
 
   const { name, img, price, asin, bsr_category, link } = findProduct;
 
   return (
-    <Box
-      component="section"
-      sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}
-    >
+    <section className="flex flex-col items-center">
       <ProductItem
         key={asin}
         img={img}
@@ -65,7 +61,7 @@ const SingleProduct: FC = () => {
         asin={asin}
         bsr_category={bsr_category}
       />
-    </Box>
+    </section>
   );
 };
 

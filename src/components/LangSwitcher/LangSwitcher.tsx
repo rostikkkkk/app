@@ -1,8 +1,6 @@
-import { useState, useEffect, FC } from "react";
-
+import { FC, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Box, Button, List, ListItem, Typography } from "@mui/material";
-import { LangSwitcherProps, Language } from "../../utils/types";
+import { Language, LangSwitcherProps } from "../../utils/types";
 
 const LangSwitcher: FC<LangSwitcherProps> = ({ lang, setLang }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -43,78 +41,27 @@ const LangSwitcher: FC<LangSwitcherProps> = ({ lang, setLang }) => {
   }
 
   return (
-    <Box sx={{ position: "relative", display: "inline-block", width: "70px" }}>
-      <Button
+    <div className="relative w-20">
+      <button
         onClick={toggleDropdown}
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          backgroundColor: "#f8f8f8",
-          border: "none",
-          cursor: "pointer",
-          zIndex: 10,
-          width: "100%",
-          lineHeight: "1.6rem",
-        }}
+        className="w-full h-8 flex items-center justify-center bg-gray-100 border border-gray-200 cursor-pointer focus:outline-none"
       >
-        <Typography
-          sx={{
-            fontFamily: "Inter",
-            fontStyle: "normal",
-            fontWeight: 600,
-            fontSize: "14px",
-            color: "#241917",
-            lineHeight: "1.6rem",
-          }}
-        >
-          {lang.label}
-        </Typography>
-      </Button>
+        <span className="text-sm font-semibold text-black">{lang.label}</span>
+      </button>
       {isOpen && (
-        <List
-          sx={{
-            zIndex: 0,
-            position: "absolute",
-            top: 0,
-            left: 0,
-            listStyle: "none",
-            padding: 0,
-            backgroundColor: "#ffffff",
-            display: "flex",
-            flexDirection: "column",
-            boxShadow: "0px 4px 11px rgba(0, 0, 0, 0.13)",
-            width: "100%",
-            justifyContent: "center",
-          }}
-        >
+        <ul className="absolute top-full left-0 w-full bg-gray-100 shadow-md rounded-b-lg border border-gray-200">
           {languageOptions.map((option) => (
-            <ListItem
+            <li
               key={option.code}
               onClick={() => handleLanguageChange(option)}
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                cursor: "pointer",
-                fontFamily: "Inter",
-                fontStyle: "normal",
-                fontWeight: 600,
-                fontSize: "14px",
-                color: "#241917",
-                transition: "background-color 0.3s ease",
-                borderRadius: "0 0 8px 8px",
-                "&:hover": {
-                  backgroundColor: "#f2f2f2",
-                },
-              }}
+              className="w-full flex justify-center px-4 py-2 cursor-pointer hover:bg-gray-100 text-sm font-semibold text-black"
             >
               {option.label}
-            </ListItem>
+            </li>
           ))}
-        </List>
+        </ul>
       )}
-    </Box>
+    </div>
   );
 };
 

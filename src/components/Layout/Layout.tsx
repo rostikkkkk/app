@@ -1,25 +1,17 @@
-import Header from "../Header/Header";
-import { Outlet } from "react-router-dom";
-import Footer from "../Footer/Footer";
 import { FC } from "react";
-import { Box, Container } from "@mui/material";
+import { Outlet } from "react-router-dom";
+import Header from "../Header/Header";
+import Footer from "../Footer/Footer";
 
 const Layout: FC = () => {
   return (
-    <Container
-      sx={{
-        bgcolor: "white",
-        display: "flex",
-        flexDirection: "column",
-        minHeight: "100vh",
-      }}
-    >
+    <div className="bg-white min-h-screen flex flex-col">
       <Header />
-      <Box component="main" sx={{ flex: 1, mb: "3rem" }}>
+      <main className="flex-1 mb-12">
         <Outlet />
-      </Box>
+      </main>
       <Footer />
-    </Container>
+    </div>
   );
 };
 

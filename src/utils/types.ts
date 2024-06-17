@@ -15,3 +15,8 @@ export interface LangSwitcherProps {
   lang: Language;
   setLang: (lang: Language) => void;
 }
+
+export type FormValues = {
+  title: string;
+  category: string;
+};

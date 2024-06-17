@@ -1,8 +1,9 @@
 import { FC, MouseEvent, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { AppBar, Box, Link, Toolbar, Typography } from "@mui/material";
+import { Link } from "react-router-dom";
 import LangSwitcher from "../LangSwitcher/LangSwitcher";
 import { useTranslation } from "react-i18next";
+
 const Header: FC = () => {
   const location = useLocation();
 
@@ -11,33 +12,25 @@ const Header: FC = () => {
       event.preventDefault();
     }
   };
+
   const { t } = useTranslation();
   const [lang, setLang] = useState({ code: "ua", label: "UA" });
+
   return (
-    <AppBar
-      position="static"
-      sx={{ backgroundColor: "#f5f5f5", mb: "3rem", boxShadow: "none" }}
-    >
-      <Toolbar variant="dense">
-        <Typography variant="h6" color="inherit" component="div">
+    <header className="bg-gray-100 mb-8">
+      <nav className="container mx-auto flex items-center justify-between p-4">
+        <h2 className="text-2xl font-bold">
           <Link
-            href="/"
+            to="/"
             onClick={handleClick}
-            sx={{
-              fontSize: "1.25em",
-              color: "#000",
-              textDecoration: "none",
-              "&:hover": {
-                color: "#0000FF",
-              },
-            }}
+            className="text-black hover:text-blue-500 no-underline "
           >
             {t("Головна сторінка")}
           </Link>
-          <LangSwitcher lang={lang} setLang={setLang} />
-        </Typography>
-      </Toolbar>
-    </AppBar>
+        </h2>
+        <LangSwitcher lang={lang} setLang={setLang} />
+      </nav>
+    </header>
   );
 };
 
