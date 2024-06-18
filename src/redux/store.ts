@@ -12,7 +12,9 @@ const store = configureStore({
     getDefaultMiddleware().concat(sagaMiddleware),
   devTools: process.env.NODE_ENV !== "production",
 });
+
 sagaMiddleware.run(rootSaga);
 
 export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
 export default store;

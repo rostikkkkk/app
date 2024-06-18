@@ -1,14 +1,14 @@
-import React, { FC, useEffect } from "react";
+import React, { FC, useEffect, useMemo } from "react";
 import * as Yup from "yup";
 import { useQueryParams, StringParam } from "use-query-params";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts, filterProducts } from "../../redux/slice/products";
-import { FormValues } from "../../utils/types";
+import { FormValues, Product } from "../../utils/types";
 import { useTranslation } from "react-i18next";
 import { Resolver, useForm } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { RootState } from "../../redux/store";
+import { RootState, AppDispatch } from "../../redux/store";
 
 const validationSchema = Yup.object({
   title: Yup.string().required().min(3, "Minimum 3 symbols are required"),
@@ -17,13 +17,14 @@ const validationSchema = Yup.object({
 
 const ProductForm: FC = () => {
   const { t } = useTranslation();
-  const dispatch = useDispatch();
-  const { products } = useSelector((state: any) => state.products.products);
+  const dispatch: AppDispatch = useDispatch();
+  const { products } = useSelector((state: RootState) => state.products);
 
   const [query, setQuery] = useQueryParams({
     title: StringParam,
     category: StringParam,
   });
+
   const form = useForm<FormValues>({
     defaultValues: {
       title: query.title || "",
@@ -32,36 +33,37 @@ const ProductForm: FC = () => {
     resolver: yupResolver(validationSchema) as Resolver<FormValues>,
   });
 
-  const { register, control, handleSubmit, formState } = form;
+  const { register, control, handleSubmit, setValue, formState } = form;
   const { errors } = formState;
 
-  console.log(products);
-  const handleFilter = (title: string) => {
-    dispatch(filterProducts({ title: title }));
+  const handleFilter = (title: string, category: string) => {
+    dispatch(filterProducts({ title: title, category: category }));
   };
 
   const onSubmit = (data: FormValues) => {
-    setQuery({ title: data.title });
-    handleFilter(data.title);
+    setQuery({ title: data.title, category: data.category });
+    handleFilter(data.title, data.category);
   };
 
-  // const uniqueCategories = Array.from(
-  //   new Set([
-  //     ...products.map((product: any) => product.bsr_category),
-  //     "All categories",
-  //   ])
-  // ).sort();
+  const uniqueCategories = useMemo(() => {
+    return Array.from(
+      new Set([
+        ...products.map((product: Product) => product.bsr_category),
+        "All categories",
+      ])
+    ).sort();
+  }, [products]);
 
   useEffect(() => {
-    // @ts-ignore
     dispatch(fetchProducts());
   }, [dispatch]);
 
   useEffect(() => {
-    if (query.title) {
-      handleFilter(query.title || "");
+    setValue("category", query.category || "All categories");
+    if (query.title || query.category) {
+      handleFilter(query.title || "", query.category || "");
     }
-  }, [query, products]);
+  }, [query, products, setValue]);
 
   return (
     <>
@@ -84,21 +86,21 @@ const ProductForm: FC = () => {
             />
           </div>
           <div className="flex flex-col">
-            {/*<label htmlFor="categories" className="sr-only">*/}
-            {/*  {t("Категорії")}*/}
-            {/*</label>*/}
+            <label htmlFor="categories" className="sr-only">
+              {t("Категорії")}
+            </label>
 
-            {/*<select*/}
-            {/*  id="categories"*/}
-            {/*  {...register("category")}*/}
-            {/*  className="w-72 border border-gray-300 rounded-md h-10 px-4"*/}
-            {/*>*/}
-            {/*  {uniqueCategories.map((option: string) => (*/}
-            {/*    <option key={option} value={option}>*/}
-            {/*      {option}*/}
-            {/*    </option>*/}
-            {/*  ))}*/}
-            {/*</select>*/}
+            <select
+              id="categories"
+              {...register("category")}
+              className="w-72 border border-gray-300 rounded-md h-10 px-4"
+            >
+              {uniqueCategories.map((option: string) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
           </div>
           <button
             className="bg-blue-600 text-white hover:bg-blue-800 py-2 px-4 rounded h-10"

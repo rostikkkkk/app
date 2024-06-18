@@ -30,14 +30,18 @@ const productsSlice = createSlice({
   reducers: {
     filterProducts(state, action) {
       const { title, category } = action.payload;
-      state.filteredProducts = state.products.filter((product) => {
-        return (
-          product.name.toLowerCase().includes(title.toLowerCase()) &&
-          (category === "" ||
-            category === "All categories" ||
-            product.bsr_category === category)
-        );
+      const filteredProducts = state.products.filter((product) => {
+        const matchesTitle = product.name
+          .toLowerCase()
+          .includes(title.toLowerCase());
+        const matchesCategory =
+          category === "" ||
+          category === "All categories" ||
+          product.bsr_category === category;
+
+        return matchesTitle && matchesCategory;
       });
+      state.filteredProducts = filteredProducts;
     },
   },
   extraReducers(builder) {
@@ -48,7 +52,6 @@ const productsSlice = createSlice({
       .addCase(fetchProducts.fulfilled, (state, action) => {
         state.isLoading = false;
         state.products = action.payload;
-        // state.filteredProducts = action.payload;
         state.error = null;
       })
       .addCase(fetchProducts.rejected, (state, action) => {
