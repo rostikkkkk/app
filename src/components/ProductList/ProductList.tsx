@@ -1,15 +1,13 @@
 import { FC, useEffect, useState } from "react";
-import ProductItem from "../ProductItem/ProductItem";
 import { useDispatch, useSelector } from "react-redux";
 import { StringParam, useQueryParams } from "use-query-params";
-import { GET_PRODUCTS } from "../../redux/actionTypes";
-import { Product } from "../../utils/types";
-
+import { fetchProducts } from "../../redux/slice/products";
+import ProductItem from "../ProductItem/ProductItem";
 const ProductList: FC = () => {
   const [showContent, setShowContent] = useState(false);
   const dispatch = useDispatch();
-  const { products, filteredProducts, isLoading } = useSelector(
-    (store: any) => store?.products || {}
+  const { products, filteredProducts, isLoading, error } = useSelector(
+    (state: any) => state.products
   );
   const [query] = useQueryParams({
     title: StringParam,
@@ -17,13 +15,16 @@ const ProductList: FC = () => {
   });
 
   useEffect(() => {
-    dispatch({ type: GET_PRODUCTS });
+    // @ts-ignore
+    dispatch(fetchProducts());
   }, [dispatch]);
 
   const queryParamsExist =
     query.title !== undefined || query.category !== undefined;
 
-  const productsList = queryParamsExist ? filteredProducts : products;
+  const productsList = queryParamsExist
+    ? filteredProducts.products
+    : products.products;
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -37,13 +38,17 @@ const ProductList: FC = () => {
     return <p>Loading...</p>;
   }
 
+  if (error) {
+    return <p>{error}</p>;
+  }
+
   if (!productsList || productsList.length === 0) {
     return <p>No products found.</p>;
   }
 
   return (
     <section>
-      {productsList.map((product: Product) => (
+      {productsList.map((product: any) => (
         <ProductItem
           key={product.asin}
           img={product.img}

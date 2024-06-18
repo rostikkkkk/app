@@ -3,21 +3,21 @@ import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Dispatch } from "redux";
 import ProductItem from "../../components/ProductItem/ProductItem";
-import { GET_PRODUCTS } from "../../redux/actionTypes";
 import { Product } from "../../utils/types";
+import { fetchProducts } from "../../redux/slice/products";
 
 const SingleProduct: FC = () => {
   const { asinCode } = useParams<{ asinCode: string }>();
   const dispatch: Dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch({ type: GET_PRODUCTS });
+    // @ts-ignore
+    dispatch(fetchProducts());
   }, [dispatch]);
 
   const { products, isLoading } = useSelector(
-    (store: any) => store?.products || {}
+    (state: any) => state?.products || {}
   );
-
   const findProduct = products.find(
     (product: Product) => product.asin === asinCode
   );

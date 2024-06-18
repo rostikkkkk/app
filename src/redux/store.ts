@@ -1,33 +1,18 @@
-import { createStore, compose, applyMiddleware, Store } from "redux";
+import { configureStore } from "@reduxjs/toolkit";
 import createSagaMiddleware from "redux-saga";
-import { rootReducer, RootState } from "./reducers";
+import productsReducer from "./slice/products";
 import rootSaga from "./sagas";
 
-interface PreloadedState {
-  products?: undefined;
-  errors?: undefined;
-}
-
-// interface PreloadedState {
-//   products?: ProductsState;
-//   errors?: ErrorsState;
-// }
-
 const sagaMiddleware = createSagaMiddleware();
-
-const composeEnhancers =
-  (typeof window === "object" &&
-    (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
-  compose;
-
-const configureStore = (preloadedState?: PreloadedState): Store<RootState> =>
-  createStore(
-    rootReducer,
-    preloadedState,
-    composeEnhancers(applyMiddleware(sagaMiddleware))
-  );
-
-const store = configureStore({});
+const store = configureStore({
+  reducer: {
+    products: productsReducer,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(sagaMiddleware),
+  devTools: process.env.NODE_ENV !== "production",
+});
 sagaMiddleware.run(rootSaga);
 
+export type RootState = ReturnType<typeof store.getState>;
 export default store;
