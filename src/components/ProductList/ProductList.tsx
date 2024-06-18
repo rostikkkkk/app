@@ -6,9 +6,12 @@ import ProductItem from "../ProductItem/ProductItem";
 const ProductList: FC = () => {
   const [showContent, setShowContent] = useState(false);
   const dispatch = useDispatch();
-  const { products, filteredProducts, isLoading, error } = useSelector(
-    (state: any) => state.products
+  const { products } = useSelector((state: any) => state.products.products);
+  const { filteredProducts } = useSelector(
+    (state: any) => state.products.filteredProducts
   );
+  const { isLoading } = useSelector((state: any) => state.products);
+  const { error } = useSelector((state: any) => state.products);
   const [query] = useQueryParams({
     title: StringParam,
     category: StringParam,
@@ -22,9 +25,7 @@ const ProductList: FC = () => {
   const queryParamsExist =
     query.title !== undefined || query.category !== undefined;
 
-  const productsList = queryParamsExist
-    ? filteredProducts.products
-    : products.products;
+  const productsList = queryParamsExist ? filteredProducts : products;
 
   useEffect(() => {
     const timer = setTimeout(() => {

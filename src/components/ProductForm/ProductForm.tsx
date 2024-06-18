@@ -18,7 +18,7 @@ const validationSchema = Yup.object({
 const ProductForm: FC = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const { products } = useSelector((state: RootState) => state.products);
+  const { products } = useSelector((state: any) => state.products.products);
 
   const [query, setQuery] = useQueryParams({
     title: StringParam,
